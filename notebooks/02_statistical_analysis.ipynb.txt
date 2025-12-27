@@ -1,0 +1,194 @@
+```json
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Step 2: Statistical Analysis and DRL Calculation\n",
+    "\n",
+    "This notebook analyzes the extracted parameters and calculates local DRLs as the 75th percentile."
+   ]
+  },
+  {
+   "cell_type":  "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Import libraries\n",
+    "import sys\n",
+    "sys. path.append('..')\n",
+    "\n",
+    "from src.statistical_analyzer import StatisticalAnalyzer\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "\n",
+    "# Set style\n",
+    "sns.set_style('whitegrid')\n",
+    "plt.rcParams['figure.figsize'] = (12, 8)\n",
+    "\n",
+    "print(\"✓ Libraries imported successfully\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2.1 Load Extracted Data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs":  [],
+   "source": [
+    "# Initialize analyzer\n",
+    "analyzer = StatisticalAnalyzer('../data/processed/extracted_parameters. csv')\n",
+    "\n",
+    "# Load data\n",
+    "analyzer.load_data()\n",
+    "\n",
+    "# Display data\n",
+    "print(\"First few rows:\")\n",
+    "analyzer.df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2.2 Descriptive Statistics"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Calculate descriptive statistics\n",
+    "stats = analyzer.calculate_descriptive_stats()\n",
+    "\n",
+    "print(\"Descriptive Statistics:\")\n",
+    "stats"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2.3 Calculate DRLs (75th Percentile)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count":  null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Calculate DRLs\n",
+    "drls = analyzer. calculate_drls()\n",
+    "\n",
+    "print(\"\\n🎯 Local DRLs (75th percentile):\")\n",
+    "print(\"=\" * 50)\n",
+    "for param, value in drls.items():\n",
+    "    print(f\"{param. replace('_', ' ').title()}: {value:.2f}\")\n",
+    "\n",
+    "# Save DRLs\n",
+    "analyzer.save_drls('../results/drls/local_drls.csv')"
+   ]
+  },
+  {
+   "cell_type":  "markdown",
+   "metadata":  {},
+   "source": [
+    "## 2.4 Visualize Distributions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create box plots with DRL lines\n",
+    "analyzer. visualize_distributions('../results/visualizations/')"
+   ]
+  },
+  {
+   "cell_type":  "markdown",
+   "metadata":  {},
+   "source": [
+    "## 2.5 Summary Table"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source":  [
+    "# Create comprehensive summary\n",
+    "summary = analyzer.create_summary_table()\n",
+    "\n",
+    "print(\"\\nComprehensive Summary: \")\n",
+    "summary"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2.6 Export Summary Report"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs":  [],
+   "source": [
+    "# Save summary to Excel\n",
+    "with pd.ExcelWriter('../results/drls/statistical_summary.xlsx') as writer:\n",
+    "    summary.to_excel(writer, sheet_name='Summary', index=False)\n",
+    "    stats.to_excel(writer, sheet_name='Descriptive Stats')\n",
+    "    \n",
+    "    # DRLs on separate sheet\n",
+    "    drl_df = pd.DataFrame({\n",
+    "        'Parameter': drls.index,\n",
+    "        'DRL (75th percentile)': drls.values\n",
+    "    })\n",
+    "    drl_df.to_excel(writer, sheet_name='DRLs', index=False)\n",
+    "\n",
+    "print(\"✓ Summary report saved to:  results/drls/statistical_summary. xlsx\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source":  [
+    "## Next Steps\n",
+    "\n",
+    "1. ✓ DRLs calculated from automated extraction\n",
+    "2. → Proceed to `03_comparison_validation.ipynb` to compare with manual method"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language":  "python",
+   "name":  "python3"
+  },
+  "language_info": {
+   "name": "python",
+   "version": "3.8.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+```

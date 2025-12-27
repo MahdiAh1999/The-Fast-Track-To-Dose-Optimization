@@ -1,0 +1,285 @@
+```json
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Step 3: Comparison and Validation\n",
+    "\n",
+    "Compare automated extraction with manual extraction to validate the methodology."
+   ]
+  },
+  {
+   "cell_type":  "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Import libraries\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "from scipy import stats\n",
+    "\n",
+    "sns.set_style('whitegrid')\n",
+    "print(\"✓ Libraries imported\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3.1 Load Both Datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Load automated extraction results\n",
+    "df_auto = pd.read_csv('../data/processed/extracted_parameters.csv')\n",
+    "\n",
+    "# Load manual extraction results\n",
+    "# TODO: Create this file with manually extracted values\n",
+    "df_manual = pd.read_csv('../data/manual/manual_extraction. csv')\n",
+    "\n",
+    "print(f\"Automated extractions: {len(df_auto)}\")\n",
+    "print(f\"Manual extractions:  {len(df_manual)}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3.2 Calculate DRLs for Both Methods"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata":  {},
+   "outputs": [],
+   "source": [
+    "# Calculate DRLs (75th percentile) for both\n",
+    "numeric_cols = df_auto.select_dtypes(include=[np. number]).columns\n",
+    "\n",
+    "drls_auto = df_auto[numeric_cols].quantile(0.75)\n",
+    "drls_manual = df_manual[numeric_cols]. quantile(0.75)\n",
+    "\n",
+    "# Create comparison DataFrame\n",
+    "comparison = pd.DataFrame({\n",
+    "    'Parameter': numeric_cols,\n",
+    "    'Automated_DRL': drls_auto. values,\n",
+    "    'Manual_DRL': drls_manual.values\n",
+    "})\n",
+    "\n",
+    "# Calculate difference and percentage difference\n",
+    "comparison['Difference'] = comparison['Automated_DRL'] - comparison['Manual_DRL']\n",
+    "comparison['Percent_Difference'] = (comparison['Difference'] / comparison['Manual_DRL']) * 100\n",
+    "\n",
+    "print(\"DRL Comparison:\")\n",
+    "comparison"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3.3 Visualize Comparison"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs":  [],
+   "source": [
+    "# Bar chart comparing DRLs\n",
+    "fig, ax = plt.subplots(figsize=(14, 6))\n",
+    "\n",
+    "x = np.arange(len(comparison))\n",
+    "width = 0.35\n",
+    "\n",
+    "bars1 = ax.bar(x - width/2, comparison['Automated_DRL'], width, label='Automated', alpha=0.8)\n",
+    "bars2 = ax. bar(x + width/2, comparison['Manual_DRL'], width, label='Manual', alpha=0.8)\n",
+    "\n",
+    "ax.set_xlabel('Parameter')\n",
+    "ax.set_ylabel('DRL Value (75th percentile)')\n",
+    "ax.set_title('Comparison of DRLs:  Automated vs Manual Extraction')\n",
+    "ax.set_xticks(x)\n",
+    "ax.set_xticklabels([p.replace('_', '\\n') for p in comparison['Parameter']], rotation=45, ha='right')\n",
+    "ax.legend()\n",
+    "ax.grid(True, alpha=0.3)\n",
+    "\n",
+    "plt.tight_layout()\n",
+    "plt.savefig('../results/visualizations/drl_comparison.png', dpi=300, bbox_inches='tight')\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type":  "markdown",
+   "metadata":  {},
+   "source": [
+    "## 3.4 Statistical Tests"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Perform paired t-test for each parameter\n",
+    "print(\"Statistical Significance Tests (Paired t-test):\")\n",
+    "print(\"=\" * 60)\n",
+    "\n",
+    "for col in numeric_cols:\n",
+    "    # Remove NaN values\n",
+    "    auto_values = df_auto[col].dropna()\n",
+    "    manual_values = df_manual[col].dropna()\n",
+    "    \n",
+    "    # Ensure same length\n",
+    "    min_len = min(len(auto_values), len(manual_values))\n",
+    "    auto_values = auto_values[:min_len]\n",
+    "    manual_values = manual_values[:min_len]\n",
+    "    \n",
+    "    # Perform t-test\n",
+    "    t_stat, p_value = stats.ttest_rel(auto_values, manual_values)\n",
+    "    \n",
+    "    significance = \"***\" if p_value < 0.001 else \"**\" if p_value < 0.01 else \"*\" if p_value < 0.05 else \"ns\"\n",
+    "    \n",
+    "    print(f\"{col}:\")\n",
+    "    print(f\"  t-statistic: {t_stat:.4f}\")\n",
+    "    print(f\"  p-value: {p_value:. 4f} {significance}\")\n",
+    "    print()"
+   ]
+  },
+  {
+   "cell_type":  "markdown",
+   "metadata":  {},
+   "source": [
+    "## 3.5 Accuracy Metrics"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source":  [
+    "# Calculate accuracy metrics\n",
+    "from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score\n",
+    "\n",
+    "print(\"Accuracy Metrics per Parameter:\")\n",
+    "print(\"=\" * 60)\n",
+    "\n",
+    "for col in numeric_cols:\n",
+    "    auto_values = df_auto[col].dropna()\n",
+    "    manual_values = df_manual[col].dropna()\n",
+    "    \n",
+    "    min_len = min(len(auto_values), len(manual_values))\n",
+    "    auto_values = auto_values[: min_len]\n",
+    "    manual_values = manual_values[:min_len]\n",
+    "    \n",
+    "    mae = mean_absolute_error(manual_values, auto_values)\n",
+    "    rmse = np.sqrt(mean_squared_error(manual_values, auto_values))\n",
+    "    r2 = r2_score(manual_values, auto_values)\n",
+    "    \n",
+    "    print(f\"{col}:\")\n",
+    "    print(f\"  MAE: {mae:.4f}\")\n",
+    "    print(f\"  RMSE: {rmse:.4f}\")\n",
+    "    print(f\"  R²: {r2:.4f}\")\n",
+    "    print()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3.6 Efficiency Analysis"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Efficiency comparison\n",
+    "manual_time_per_image = 5  # minutes (estimate)\n",
+    "automated_time_per_image = 0.5  # minutes (estimate)\n",
+    "\n",
+    "n_images = len(df_auto)\n",
+    "\n",
+    "total_manual_time = manual_time_per_image * n_images\n",
+    "total_automated_time = automated_time_per_image * n_images\n",
+    "\n",
+    "time_saved = total_manual_time - total_automated_time\n",
+    "efficiency_gain = (time_saved / total_manual_time) * 100\n",
+    "\n",
+    "print(\"⏱️ Efficiency Analysis:\")\n",
+    "print(\"=\" * 60)\n",
+    "print(f\"Number of images:  {n_images}\")\n",
+    "print(f\"Manual extraction time: {total_manual_time:.1f} minutes ({total_manual_time/60:. 1f} hours)\")\n",
+    "print(f\"Automated extraction time: {total_automated_time:.1f} minutes ({total_automated_time/60:.1f} hours)\")\n",
+    "print(f\"Time saved: {time_saved:.1f} minutes ({time_saved/60:.1f} hours)\")\n",
+    "print(f\"Efficiency gain:  {efficiency_gain:.1f}%\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3.7 Final Report"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs":  [],
+   "source": [
+    "# Save comparison report\n",
+    "comparison. to_csv('../results/drls/comparison_report.csv', index=False)\n",
+    "\n",
+    "print(\"✅ Validation complete!\")\n",
+    "print(\"\\nAll results saved to results/ folder\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source":  [
+    "## Conclusions\n",
+    "\n",
+    "### Summary of Findings:\n",
+    "1. **Accuracy**: [Describe accuracy of automated vs manual]\n",
+    "2. **Efficiency**: [Time saved, efficiency gains]\n",
+    "3. **Recommendations**: [Improvements needed, when to use automated vs manual]\n",
+    "\n",
+    "### Future Work:\n",
+    "- Improve OCR accuracy with better preprocessing\n",
+    "- Test on larger dataset\n",
+    "- Develop GUI for easier use"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python",
+   "version": "3.8.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+```

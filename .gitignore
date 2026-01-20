@@ -27,19 +27,32 @@ wheels/
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
-# Data files
+# Data files - exclude actual data but keep structure
 data/raw/*
-! data/raw/.gitkeep
+!data/raw/.gitkeep
+!data/raw/README.md
 data/processed/*
-! data/processed/.gitkeep
+!data/processed/.gitkeep
 data/manual/*
 !data/manual/.gitkeep
+!data/manual/README.md
+!data/manual/manual_extraction_template.csv
+data/quality_reports/*
+!data/quality_reports/.gitkeep
 
-# Results
+# Results - exclude generated files but keep structure
 results/drls/*
 !results/drls/.gitkeep
 results/visualizations/*
 !results/visualizations/.gitkeep
+results/*.csv
+!results/README.md
+
+# Temporary and debug files
+*.log
+debug_*.txt
+temp_*
+.pytest_cache/
 
 # IDE
 .vscode/

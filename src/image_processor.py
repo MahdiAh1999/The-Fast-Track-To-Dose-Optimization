@@ -25,14 +25,34 @@ class ImageProcessor:
         self. processed_image = None
         
     def load_image(self):
-        """Load image from file"""
-        try: 
+        """Load image from file with comprehensive error handling"""
+        try:
+            # Check if file exists
+            if not Path(self.image_path).exists():
+                print(f"❌ Error: File not found: {self.image_path}")
+                return False
+            
+            # Check file size
+            file_size = Path(self.image_path).stat().st_size
+            if file_size == 0:
+                print(f"❌ Error: File is empty: {self.image_path}")
+                return False
+            
+            # Try to load image
             self.original_image = cv2.imread(self.image_path)
             if self.original_image is None:
-                raise ValueError(f"Could not load image:  {self.image_path}")
+                print(f"❌ Error: Could not load image (invalid format?): {self.image_path}")
+                return False
+            
+            # Check if image has content
+            if self.original_image.size == 0:
+                print(f"❌ Error: Image has no data: {self.image_path}")
+                return False
+                
             return True
+            
         except Exception as e:
-            print(f"Error loading image: {e}")
+            print(f"❌ Unexpected error loading image {self.image_path}: {e}")
             return False
     
     def preprocess_for_ocr(self):
@@ -43,20 +63,25 @@ class ImageProcessor:
         - Denoise
         """
         if self.original_image is None:
-            print("No image loaded.  Call load_image() first.")
+            print("❌ Error: No image loaded. Call load_image() first.")
             return None
         
-        # Convert to grayscale
-        gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
-        
-        # Apply thresholding to get better contrast
-        _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
-        
-        # Denoise
-        denoised = cv2.fastNlMeansDenoising(thresh, None, 10, 7, 21)
-        
-        self.processed_image = denoised
-        return self.processed_image
+        try:
+            # Convert to grayscale
+            gray = cv2.cvtColor(self.original_image, cv2.COLOR_BGR2GRAY)
+            
+            # Apply thresholding to get better contrast
+            _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+            
+            # Denoise
+            denoised = cv2.fastNlMeansDenoising(thresh, None, 10, 7, 21)
+            
+            self.processed_image = denoised
+            return self.processed_image
+            
+        except Exception as e:
+            print(f"❌ Error during preprocessing: {e}")
+            return None
     
     def save_processed_image(self, output_path):
         """Save the processed image"""

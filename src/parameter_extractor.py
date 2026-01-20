@@ -36,18 +36,28 @@ class ParameterExtractor:
             image_path (str): Path to the image
             
         Returns:
-            str: Extracted text
+            str: Extracted text or empty string on failure
         """
-        if self.ocr_engine == 'tesseract':
-            # Tesseract OCR
-            # Configure for French language:  lang='fra+eng'
-            text = pytesseract.image_to_string(image_path, lang='fra+eng')
-        else: 
-            # EasyOCR
-            result = self.reader.readtext(image_path)
-            text = ' '.join([item[1] for item in result])
-        
-        return text
+        try:
+            if self.ocr_engine == 'tesseract':
+                # Tesseract OCR
+                # Configure for French language:  lang='fra+eng'
+                text = pytesseract.image_to_string(image_path, lang='fra+eng')
+            else: 
+                # EasyOCR
+                result = self.reader.readtext(image_path)
+                text = ' '.join([item[1] for item in result])
+            
+            # Check if text is empty
+            if not text or text.strip() == '':
+                print(f"⚠ Warning: No text extracted from {Path(image_path).name}")
+                return ""
+            
+            return text
+            
+        except Exception as e:
+            print(f"❌ OCR Error for {Path(image_path).name}: {e}")
+            return ""
     
     def parse_parameters(self, text):
         """
@@ -101,20 +111,52 @@ class ParameterExtractor:
             image_path (str): Path to the image
             
         Returns:
-            dict:  Extracted parameters
+            dict: Extracted parameters (with None for failed extractions)
         """
-        print(f"Extracting from: {Path(image_path).name}")
-        
-        # Extract text
-        text = self.extract_text(image_path)
-        
-        # Parse parameters
-        parameters = self.parse_parameters(text)
-        
-        # Add image filename
-        parameters['image_file'] = Path(image_path).name
-        
-        return parameters
+        try:
+            print(f"Extracting from: {Path(image_path).name}")
+            
+            # Check if file exists
+            if not Path(image_path).exists():
+                print(f"❌ Error: File not found: {image_path}")
+                return self._get_empty_parameters(Path(image_path).name)
+            
+            # Extract text
+            text = self.extract_text(image_path)
+            
+            # Check if OCR returned text
+            if not text or text.strip() == '':
+                print(f"⚠ Warning: OCR returned no text for {Path(image_path).name}")
+                return self._get_empty_parameters(Path(image_path).name)
+            
+            # Parse parameters
+            parameters = self.parse_parameters(text)
+            
+            # Add image filename
+            parameters['image_file'] = Path(image_path).name
+            
+            # Count successfully extracted parameters
+            extracted_count = sum(1 for v in parameters.values() if v is not None and v != Path(image_path).name)
+            print(f"  ✓ Extracted {extracted_count}/7 parameters")
+            
+            return parameters
+            
+        except Exception as e:
+            print(f"❌ Extraction failed for {Path(image_path).name}: {e}")
+            return self._get_empty_parameters(Path(image_path).name)
+    
+    def _get_empty_parameters(self, filename):
+        """Return empty parameter dict for failed extractions"""
+        return {
+            'image_file': filename,
+            'fluoro_time': None,
+            'total_fluoro_kair': None,
+            'dose_entree_peau_max': None,
+            'exposit_ni': None,
+            'total_pds': None,
+            'total_dose': None,
+            'frequence_acquisition': None
+        }
     
     def batch_extract(self, image_folder, output_csv):
         """

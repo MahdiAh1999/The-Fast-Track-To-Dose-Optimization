@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<!-- QR Code Target URL: https://mahdiAh1999.github.io/The-Fast-Track-To-Dose-Optimization/ -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Fast Track to Dose Optimization | Python OCR for Real-time DRLs</title>
+  <meta name="description" content="Python OCR for Real-time Diagnostic Reference Levels in Interventional Radiology & Radioguided Surgery. 80% faster, 99.43% accurate automated PACS dose extraction." />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mahdiAh1999.github.io/The-Fast-Track-To-Dose-Optimization/" />
+  <meta property="og:title" content="The Fast Track to Dose Optimization — Python OCR for Real-time DRLs" />
+  <meta property="og:description" content="80% faster dose extraction · 99.43% accuracy · Real-time Diagnostic Reference Levels in Interventional Radiology." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/MahdiAh1999/The-Fast-Track-To-Dose-Optimization/main/results/visualizations/.gitkeep" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Fast Track to Dose Optimization" />
+  <meta name="twitter:description" content="Python OCR for Real-time DRLs in Interventional Radiology. 80% faster, 99.43% accurate." />
+
+  <!-- Favicon: radiation symbol SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%98%A2%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ─── CSS Reset & Custom Properties ───────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0a1628;
+      --navy-mid:   #0f2040;
+      --navy-light: #1a3055;
+      --teal:       #00d4aa;
+      --teal-dim:   #00a884;
+      --teal-glow:  rgba(0, 212, 170, 0.15);
+      --white:      #ffffff;
+      --grey:       #8fa3bf;
+      --card-bg:    rgba(255,255,255,0.04);
+      --border:     rgba(0, 212, 170, 0.2);
+      --radius:     12px;
+      --transition: 0.3s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--navy);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── Utility ──────────────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      color: var(--grey);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin-bottom: 48px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 212, 170, 0.12);
+    }
+
+    /* ─── Fade-in on scroll ─────────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── HERO ──────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 60px 20px 80px;
+    }
+
+    /* Radial glow background */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 20%, rgba(0,212,170,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,100,180,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Animated particle dots */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: float linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes float {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.2; }
+      100% { transform: translateY(-20px) rotate(360deg); opacity: 0; }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 860px; }
+
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 18px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--teal);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff 0%, #00d4aa 50%, #4fc8f8 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--grey);
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 44px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 212, 170, 0.08);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 99px;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .badge i { color: var(--teal); font-size: 0.9em; }
+
+    .hero-authors {
+      font-size: 0.9rem;
+      color: var(--grey);
+      line-height: 1.8;
+    }
+    .hero-authors strong { color: var(--white); }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      border-radius: 2px;
+      margin: 40px auto 0;
+    }
+
+    /* ─── PROBLEM SECTION ───────────────────────────────────────────── */
+    #problem { background: var(--navy-mid); }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .problem-card {
+      background: rgba(255, 80, 80, 0.05);
+      border: 1px solid rgba(255, 100, 100, 0.2);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+    }
+
+    .problem-card .icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: #ff6b6b;
+    }
+
+    .problem-card .value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ff8080;
+      margin-bottom: 6px;
+    }
+
+    .problem-card p {
+      font-size: 0.9rem;
+      color: var(--grey);
+    }
+
+    /* ─── METHODOLOGY ───────────────────────────────────────────────── */
+    #methodology { background: var(--navy); }
+
+    .pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-top: 40px;
+      position: relative;
+    }
+
+    .step {
+      flex: 1 1 220px;
+      position: relative;
+      padding: 28px 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 8px;
+      text-align: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .step:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 212, 170, 0.15);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: var(--teal);
+      color: var(--navy);
+      border-radius: 50%;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+    }
+
+    .step-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .step p {
+      font-size: 0.9rem;
+      color: var(--grey);
+      line-height: 1.6;
+    }
+
+    .step-arrow {
+      display: none;
+    }
+
+    @media (min-width: 900px) {
+      .pipeline { flex-wrap: nowrap; align-items: stretch; }
+      .step-arrow {
+        display: flex;
+        align-items: center;
+        color: var(--teal);
+        font-size: 1.3rem;
+        flex-shrink: 0;
+        margin: 8px -4px;
+        z-index: 1;
+      }
+    }
+
+    /* ─── RESULTS ───────────────────────────────────────────────────── */
+    #results { background: var(--navy-mid); }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .results-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .drl-table-card {
+      grid-column: 1 / -1;
+    }
+
+    .drl-table-card h3 {
+      font-size: 1.1rem;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .drl-table-card .study-note {
+      font-size: 0.8rem;
+      color: var(--grey);
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--grey);
+    }
+
+    td:first-child { color: var(--white); font-weight: 600; }
+    td.highlight { color: var(--teal); font-weight: 700; font-size: 1.05rem; }
+
+    tr:last-child td { border-bottom: none; }
+
+    .counters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      grid-column: 1 / -1;
+      margin-top: 8px;
+    }
+
+    .counter-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    .counter-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .counter-label {
+      font-size: 0.78rem;
+      color: var(--grey);
+      line-height: 1.3;
+    }
+
+    /* ─── TECH STACK ─────────────────────────────────────────────────── */
+    #tech { background: var(--navy); }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .tech-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .tech-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(0, 212, 170, 0.12);
+    }
+
+    .tech-item .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .tech-item h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .tech-item p {
+      font-size: 0.75rem;
+      color: var(--grey);
+    }
+
+    /* ─── STATISTICAL VALIDATION ────────────────────────────────────── */
+    #validation { background: var(--navy-mid); }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .stat-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-item .stat-key {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.8rem;
+      color: var(--teal);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .stat-item .stat-val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .stat-item p {
+      font-size: 0.78rem;
+      color: var(--grey);
+      margin-top: 4px;
+    }
+
+    .validation-note {
+      margin-top: 28px;
+      padding: 16px 20px;
+      background: rgba(0, 212, 170, 0.06);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      border-radius: var(--radius);
+      font-size: 0.88rem;
+      color: var(--grey);
+    }
+    .validation-note strong { color: var(--teal); }
+
+    /* ─── OPEN SOURCE ────────────────────────────────────────────────── */
+    #opensource { background: var(--navy); }
+
+    .oss-box {
+      background: linear-gradient(135deg, rgba(0,212,170,0.08) 0%, rgba(0,100,180,0.08) 100%);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 640px;
+      margin: 40px auto 0;
+    }
+
+    .oss-box .oss-icon {
+      font-size: 3rem;
+      color: var(--teal);
+      margin-bottom: 16px;
+    }
+
+    .oss-box h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .oss-box p {
+      color: var(--grey);
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--navy);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(0, 212, 170, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    /* ─── REFERENCES ─────────────────────────────────────────────────── */
+    #references { background: var(--navy-mid); }
+
+    .ref-list {
+      margin-top: 32px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ref-list li {
+      padding: 14px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      color: var(--grey);
+      position: relative;
+      padding-left: 44px;
+    }
+
+    .ref-list li::before {
+      content: '\f02d';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      color: var(--teal);
+      font-size: 0.85rem;
+    }
+
+    .ref-list strong { color: var(--white); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────────── */
+    footer {
+      background: #060e1c;
+      padding: 48px 20px;
+      text-align: center;
+    }
+
+    .footer-authors {
+      margin-bottom: 28px;
+    }
+
+    .footer-authors .author {
+      font-size: 0.9rem;
+      color: var(--grey);
+      margin: 4px 0;
+    }
+
+    .footer-authors .author strong {
+      color: var(--white);
+    }
+
+    .footer-authors a {
+      color: var(--teal);
+      font-size: 0.88rem;
+    }
+
+    .footer-bottom {
+      font-size: 0.8rem;
+      color: #4a6080;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .footer-bottom span {
+      color: var(--teal);
+    }
+
+    /* ─── Scroll-to-top button ───────────────────────────────────────── */
+    #scrollTop {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 42px;
+      height: 42px;
+      background: var(--teal);
+      color: var(--navy);
+      border: none;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 4px 14px rgba(0, 212, 170, 0.35);
+    }
+
+    #scrollTop:hover { transform: scale(1.1); }
+    #scrollTop.show { display: flex; }
+
+    /* ─── Divider line ───────────────────────────────────────────────── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ─── Responsive tweaks ──────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .section { padding: 56px 0; }
+      .oss-box { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll-to-top button -->
+  <button id="scrollTop" aria-label="Scroll to top"><i class="fa-solid fa-chevron-up"></i></button>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 1: HERO
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <!-- Particle background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="hero-content fade-in">
+      <div class="hero-eyebrow"><i class="fa-solid fa-radiation"></i> &nbsp;Medical Physics · Interventional Radiology</div>
+      <h1 class="hero-title">The Fast Track to Dose Optimization</h1>
+      <p class="hero-subtitle">
+        Python OCR For Real-time Diagnostic Reference Levels In<br />
+        Interventional Radiology &amp; Radioguided Surgery
+      </p>
+
+      <div class="hero-badges">
+        <span class="badge"><i class="fa-solid fa-rocket"></i> 80% Faster</span>
+        <span class="badge"><i class="fa-solid fa-circle-check"></i> 99.43% Accurate</span>
+        <span class="badge"><i class="fa-solid fa-bolt"></i> Real-time DRLs</span>
+      </div>
+
+      <div class="hero-authors">
+        <strong>El Mahdi Ahabchane</strong> &nbsp;·&nbsp; <strong>Pr Rajae Sebihi</strong> &nbsp;·&nbsp; <strong>Dr Anass Chehboun</strong><br />
+        LPHE-MS, Mohammed V University, Rabat &nbsp;|&nbsp; UM6P Hospitals
+      </div>
+      <div class="divider"></div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 2: THE PROBLEM
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="problem" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-solid fa-triangle-exclamation"></i> &nbsp;The Challenge</p>
+      <h2 class="section-title fade-in">The Manual Extraction Bottleneck</h2>
+      <p class="section-subtitle fade-in">
+        Traditional dose data extraction from PACS dosimetric images is time-consuming, error-prone,
+        and prevents real-time Diagnostic Reference Level (DRL) monitoring in clinical settings.
+      </p>
+
+      <div class="problem-grid">
+        <div class="problem-card fade-in">
+          <div class="icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="value">3.75 min</div>
+          <p>per image for manual PACS extraction</p>
+        </div>
+        <div class="problem-card fade-in">
+          <div class="icon"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="value">16.5 min</div>
+          <p>average time per patient case</p>
+        </div>
+        <div class="problem-card fade-in">
+          <div class="icon"><i class="fa-solid fa-xmark-circle"></i></div>
+          <div class="value">3.75%</div>
+          <p>human transcription error rate</p>
+        </div>
+        <div class="problem-card fade-in">
+          <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="value">None</div>
+          <p>real-time DRL monitoring available</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 3: METHODOLOGY — 4-STEP PIPELINE
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="methodology" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-solid fa-diagram-project"></i> &nbsp;Methodology</p>
+      <h2 class="section-title fade-in">Our Solution — 4-Step Pipeline</h2>
+      <p class="section-subtitle fade-in">
+        An automated end-to-end pipeline that reads PACS dosimetric screenshots using OCR,
+        computes DRLs, and validates results — with no PACS modification required.
+      </p>
+
+      <div class="pipeline">
+
+        <div class="step fade-in">
+          <div class="step-number">①</div>
+          <div class="step-title">EXTRACT</div>
+          <p>
+            Python OCR (Tesseract + OpenCV) automatically reads
+            <strong>PKA</strong>, <strong>Ka,r</strong>, and <strong>Fluoroscopy Time</strong>
+            from PACS dosimetric screenshots — no PACS API required.
+          </p>
+        </div>
+
+        <div class="step-arrow fade-in"><i class="fa-solid fa-chevron-right"></i></div>
+
+        <div class="step fade-in">
+          <div class="step-number">②</div>
+          <div class="step-title">CALCULATE</div>
+          <p>
+            Statistical analysis computes DRLs as the <strong>3rd quartile (75th percentile)</strong>
+            across <em>n</em> = 50 coronary angiography procedures, following ICRP/IAEA standards.
+          </p>
+        </div>
+
+        <div class="step-arrow fade-in"><i class="fa-solid fa-chevron-right"></i></div>
+
+        <div class="step fade-in">
+          <div class="step-number">③</div>
+          <div class="step-title">VALIDATE</div>
+          <p>
+            <strong>99.43% accuracy</strong> (348/350 values correct) vs. manual extraction.
+            Cross-validated on <em>Siemens Artis Q</em> and <em>Philips Azurion</em> systems.
+          </p>
+        </div>
+
+        <div class="step-arrow fade-in"><i class="fa-solid fa-chevron-right"></i></div>
+
+        <div class="step fade-in">
+          <div class="step-number">④</div>
+          <div class="step-title">IMPLEMENT</div>
+          <p>
+            Seamless deployment — <strong>no PACS modification required</strong>.
+            Adaptable to any PACS/IEC format. Open-source under MIT license.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 4: KEY RESULTS
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="results" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-solid fa-chart-bar"></i> &nbsp;Key Results</p>
+      <h2 class="section-title fade-in">Established DRLs &amp; Performance Metrics</h2>
+      <p class="section-subtitle fade-in">
+        Coronary angiography study on Siemens Artis Q (<em>n</em> = 50 procedures).
+      </p>
+
+      <div class="results-grid">
+
+        <!-- DRL Table -->
+        <div class="card drl-table-card fade-in">
+          <h3><i class="fa-solid fa-table"></i> &nbsp;Established DRLs — Coronary Angiography</h3>
+          <p class="study-note">Siemens Artis Q &nbsp;|&nbsp; n = 50 patients &nbsp;|&nbsp; ICRP 3rd quartile (Q3) methodology</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Q1 (25th percentile)</th>
+                <th>Median (Q2)</th>
+                <th>DRL — Q3 (75th percentile)</th>
+                <th>Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PKA</td>
+                <td>—</td>
+                <td>—</td>
+                <td class="highlight">4,823</td>
+                <td>µGy·m²</td>
+              </tr>
+              <tr>
+                <td>Ka,r</td>
+                <td>—</td>
+                <td>—</td>
+                <td class="highlight">2,570</td>
+                <td>µGy</td>
+              </tr>
+              <tr>
+                <td>Fluoroscopy Time</td>
+                <td>—</td>
+                <td>—</td>
+                <td class="highlight">7.0</td>
+                <td>min</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Animated Counters -->
+        <div class="counters-grid fade-in">
+          <div class="counter-card">
+            <div class="counter-value" data-target="80" data-suffix="%">0%</div>
+            <div class="counter-label">Time reduction vs.<br />manual extraction</div>
+          </div>
+          <div class="counter-card">
+            <div class="counter-value" data-target="99.43" data-suffix="%" data-decimals="2">0%</div>
+            <div class="counter-label">Extraction accuracy</div>
+          </div>
+          <div class="counter-card">
+            <div class="counter-value" data-target="348" data-suffix="/350">0/350</div>
+            <div class="counter-label">Correct values extracted</div>
+          </div>
+          <div class="counter-card">
+            <div class="counter-value" data-target="7" data-suffix="">0</div>
+            <div class="counter-label">Variables extracted per image</div>
+          </div>
+          <div class="counter-card">
+            <div class="counter-value" data-target="50" data-suffix="">0</div>
+            <div class="counter-label">Patient procedures validated</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 5: TECHNOLOGY STACK
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="tech" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-solid fa-microchip"></i> &nbsp;Technology Stack</p>
+      <h2 class="section-title fade-in">Built With Open-Source Tools</h2>
+      <p class="section-subtitle fade-in">
+        Reproducible, dependency-light stack using widely available Python libraries
+        and OCR engines.
+      </p>
+
+      <div class="tech-grid">
+        <div class="tech-item fade-in">
+          <div class="icon">🐍</div>
+          <h4>Python 3.8+</h4>
+          <p>Core language</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon">👁️</div>
+          <h4>OpenCV</h4>
+          <p>Image preprocessing</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon"><i class="fa-solid fa-font" style="color:var(--teal)"></i></div>
+          <h4>Tesseract OCR</h4>
+          <p>Primary OCR engine</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon"><i class="fa-solid fa-eye" style="color:var(--teal)"></i></div>
+          <h4>EasyOCR</h4>
+          <p>Secondary OCR engine</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon">🐼</div>
+          <h4>Pandas / NumPy</h4>
+          <p>Data analysis</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon">📐</div>
+          <h4>SciPy</h4>
+          <p>Statistical analysis</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon">🏥</div>
+          <h4>Siemens Artis Q</h4>
+          <p>Primary validation system</p>
+        </div>
+        <div class="tech-item fade-in">
+          <div class="icon">🔬</div>
+          <h4>Philips Azurion</h4>
+          <p>Cross-validation system</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 6: STATISTICAL VALIDATION
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="validation" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-solid fa-square-root-variable"></i> &nbsp;Statistical Validation</p>
+      <h2 class="section-title fade-in">Structural Equation Model Fit Indices</h2>
+      <p class="section-subtitle fade-in">
+        SEM analysis confirms the statistical soundness of the automated pipeline
+        against the gold-standard manual reference dataset.
+      </p>
+
+      <div class="stat-grid">
+        <div class="stat-item fade-in">
+          <div class="stat-key">χ²</div>
+          <div class="stat-val">566.88</div>
+          <p>df = 201, p &lt; .0001</p>
+        </div>
+        <div class="stat-item fade-in">
+          <div class="stat-key">SRMR</div>
+          <div class="stat-val">.12</div>
+          <p>Standardized Root Mean Square Residual</p>
+        </div>
+        <div class="stat-item fade-in">
+          <div class="stat-key">RMSEA</div>
+          <div class="stat-val">.08</div>
+          <p>Root Mean Square Error of Approximation</p>
+        </div>
+        <div class="stat-item fade-in">
+          <div class="stat-key">CFI</div>
+          <div class="stat-val">.88</div>
+          <p>Comparative Fit Index</p>
+        </div>
+        <div class="stat-item fade-in">
+          <div class="stat-key">TLI</div>
+          <div class="stat-val">.863</div>
+          <p>Tucker–Lewis Index</p>
+        </div>
+        <div class="stat-item fade-in">
+          <div class="stat-key">SEM</div>
+          <div class="stat-val">χ²[201]</div>
+          <p>= 566.88, p &lt; 0.001</p>
+        </div>
+      </div>
+
+      <div class="validation-note fade-in">
+        <i class="fa-solid fa-shield-halved" style="color:var(--teal)"></i>
+        &nbsp;<strong>Post-processing range-checking safeguard:</strong>
+        2 values (0.57%) were flagged by the post-OCR range-check validation step —
+        demonstrating the pipeline's built-in self-correction mechanism
+        for out-of-range readings.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 7: OPEN SOURCE & CODE
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="opensource" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-brands fa-github"></i> &nbsp;Open Source</p>
+      <h2 class="section-title fade-in" style="text-align:center">Free &amp; Open for the Community</h2>
+
+      <div class="oss-box fade-in">
+        <div class="oss-icon"><i class="fa-solid fa-lock-open"></i></div>
+        <h3>Open Source — MIT License</h3>
+        <p>
+          Adaptable to any PACS system aligned with ICRP / IAEA / IEC standards.
+          Fork it, adapt it, and contribute back to the medical physics community.
+        </p>
+        <div class="btn-group">
+          <a class="btn btn-primary"
+             href="https://github.com/MahdiAh1999/The-Fast-Track-To-Dose-Optimization"
+             target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-folder-open"></i> View Source Code
+          </a>
+          <a class="btn btn-secondary"
+             href="https://github.com/MahdiAh1999/The-Fast-Track-To-Dose-Optimization"
+             target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-star"></i> Star This Repo
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SECTION 8: REFERENCES
+  ═══════════════════════════════════════════════════════════════ -->
+  <section id="references" class="section">
+    <div class="container">
+      <p class="section-label fade-in"><i class="fa-solid fa-book-open"></i> &nbsp;References</p>
+      <h2 class="section-title fade-in">Key Literature</h2>
+
+      <ul class="ref-list">
+        <li class="fade-in">
+          <strong>Tsuris &amp; Dendalts (2023)</strong> —
+          Cross-system validation reference for PACS dose extraction reproducibility
+          on the Philips Azurion platform. Used as comparative benchmark for cross-system DRL generalizability.
+        </li>
+        <li class="fade-in">
+          <strong>ICRP Publication 135</strong> —
+          <em>Diagnostic Reference Levels in Medical Imaging.</em>
+          International Commission on Radiological Protection. The foundational standard
+          for DRL methodology and the 3rd-quartile Q3 approach applied in this study.
+        </li>
+        <li class="fade-in">
+          <strong>IAEA Human Health Series No. 19</strong> —
+          <em>Establishing Guidance Levels in X-Ray Guided Medical Interventional Procedures.</em>
+          Provides the international framework for DRLs in interventional radiology.
+        </li>
+        <li class="fade-in">
+          <strong>IEC 60601-2-43:2022</strong> —
+          Medical electrical equipment — particular requirements for the basic safety
+          and essential performance of X-ray equipment for interventional procedures.
+          Referenced for dosimetric parameter standardization across PACS systems.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-authors">
+        <div class="author">
+          <strong>El Mahdi Ahabchane</strong> — LPHE-MS, Mohammed V University, Rabat
+        </div>
+        <div class="author">
+          <a href="mailto:el_mahdi_ahabchane@um5.ac.ma">el_mahdi_ahabchane@um5.ac.ma</a>
+        </div>
+        <div class="author" style="margin-top:10px">
+          <strong>Pr Rajae Sebihi</strong> — Faculty of Sciences, Mohammed V University, Rabat
+        </div>
+        <div class="author">
+          <strong>Dr Anass Chehboun</strong> — Interventional and Diagnostic Radiology, UM6P Hospitals
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 &nbsp;·&nbsp; <span>MIT License</span> &nbsp;·&nbsp; Open Source
+        &nbsp;·&nbsp;
+        <a href="https://github.com/MahdiAh1999/The-Fast-Track-To-Dose-Optimization"
+           target="_blank" rel="noopener noreferrer">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════════════════════════ -->
+  <script>
+    /* ── Particle generator ── */
+    (function () {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 24; i++) {
+        const p = document.createElement('div');
+        p.classList.add('particle');
+        const size = Math.random() * 4 + 2;
+        p.style.cssText = [
+          'width:' + size + 'px',
+          'height:' + size + 'px',
+          'left:' + Math.random() * 100 + '%',
+          'animation-duration:' + (Math.random() * 14 + 8) + 's',
+          'animation-delay:' + (Math.random() * -20) + 's',
+          'opacity:' + (Math.random() * 0.4 + 0.1)
+        ].join(';');
+        container.appendChild(p);
+      }
+    }());
+
+    /* ── Intersection Observer for fade-in ── */
+    (function () {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      // Hero fades in immediately
+      document.querySelectorAll('#hero .fade-in').forEach(function (el) {
+        el.classList.add('visible');
+      });
+
+      document.querySelectorAll('.fade-in:not(#hero .fade-in)').forEach(function (el) {
+        io.observe(el);
+      });
+    }());
+
+    /* ── Animated counters ── */
+    (function () {
+      function animateCounter(el) {
+        const target = parseFloat(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        const decimals = parseInt(el.dataset.decimals || '0', 10);
+        const duration = 1800;
+        const start = performance.now();
+
+        function step(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          // ease-out cubic
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = (target * eased).toFixed(decimals);
+          el.textContent = current + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
+      }
+
+      const counterObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('.counter-value[data-target]').forEach(function (el) {
+        counterObserver.observe(el);
+      });
+    }());
+
+    /* ── Scroll-to-top button ── */
+    (function () {
+      var btn = document.getElementById('scrollTop');
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 400) {
+          btn.classList.add('show');
+        } else {
+          btn.classList.remove('show');
+        }
+      });
+      btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }());
+  </script>
+</body>
+</html>

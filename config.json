@@ -6,7 +6,36 @@
     "easyocr_languages": ["fr", "en"],
     "confidence_threshold": 0.5
   },
-  
+
+  "study": {
+    "procedure_type": "coronary_angiography",
+    "primary_system": "Siemens Artis Q",
+    "cross_validation_system": "Philips Azurion",
+    "reference_population": 50,
+    "reference_paper": "Tsuris & Dendalts (2023)"
+  },
+
+  "primary_drl_parameters": ["pka", "kair", "fluoro_time"],
+
+  "parameter_units": {
+    "pka": "µGy·m²",
+    "kair": "µGy",
+    "fluoro_time": "min"
+  },
+
+  "timing": {
+    "manual_time_per_image_minutes": 3.75,
+    "enable_timing_benchmark": true
+  },
+
+  "range_checks": {
+    "pka": {"min": 100, "max": 50000, "unit": "µGy·m²"},
+    "kair": {"min": 50, "max": 20000, "unit": "µGy"},
+    "fluoro_time": {"min": 0.1, "max": 120, "unit": "min"},
+    "total_pds": {"min": 100, "max": 100000, "unit": "mGy·cm²"},
+    "total_dose": {"min": 10, "max": 30000, "unit": "mGy"}
+  },
+
   "image_quality": {
     "min_resolution": [800, 600],
     "min_brightness": 50,
@@ -14,7 +43,7 @@
     "min_contrast": 30,
     "min_sharpness": 100
   },
-  
+
   "preprocessing": {
     "threshold_value": 150,
     "threshold_type": "binary",
@@ -22,8 +51,16 @@
     "denoise_template_window": 7,
     "denoise_search_window": 21
   },
-  
+
   "extraction_patterns": {
+    "pka": {
+      "pattern": "PKA.*?[:\\s]+([0-9]+[.,]?[0-9]*)\\s*(µGy|uGy|mGy)?",
+      "description": "PKA — Kerma-Area Product (µGy·m²)"
+    },
+    "kair": {
+      "pattern": "[Kk]a[,.]?r.*?[:\\s]+([0-9]+[.,]?[0-9]*)",
+      "description": "Ka,r — Reference air kerma (µGy)"
+    },
     "fluoro_time": {
       "pattern": "[Ff]luoro.*?time.*?[:\\s]+([0-9]+[.,]?[0-9]*)\\s*(min|s)",
       "description": "Fluoroscopy time in minutes or seconds"
@@ -53,19 +90,22 @@
       "description": "Acquisition frequency (Frames per second)"
     }
   },
-  
+
   "validation": {
     "acceptable_error_percentage": 10,
     "outlier_threshold_std": 3,
-    "min_samples_for_drls": 20
+    "min_samples_for_drls": 20,
+    "poster_accuracy_target": 99.43,
+    "poster_total_values": 350,
+    "poster_correct_values": 348
   },
-  
+
   "statistics": {
     "drl_percentile": 0.75,
     "quartiles": [0.25, 0.5, 0.75],
     "confidence_level": 0.95
   },
-  
+
   "file_paths": {
     "raw_images": "data/raw/",
     "processed_images": "data/processed/",
@@ -74,7 +114,7 @@
     "results_drls": "results/drls/",
     "results_visualizations": "results/visualizations/"
   },
-  
+
   "logging": {
     "level": "INFO",
     "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",

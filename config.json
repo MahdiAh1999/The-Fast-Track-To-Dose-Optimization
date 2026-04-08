@@ -75,6 +75,16 @@
     "results_visualizations": "results/visualizations/"
   },
   
+  "crop_regions": {
+    "total_dap":              {"x": 0, "y": 0, "width": 0, "height": 0},
+    "exposure_images":        {"x": 0, "y": 0, "width": 0, "height": 0},
+    "fluoro_time":            {"x": 0, "y": 0, "width": 0, "height": 0},
+    "air_kerma":              {"x": 0, "y": 0, "width": 0, "height": 0},
+    "dose_entree_peau_max":   {"x": 0, "y": 0, "width": 0, "height": 0},
+    "total_dose":             {"x": 0, "y": 0, "width": 0, "height": 0},
+    "frequence_acquisition":  {"x": 0, "y": 0, "width": 0, "height": 0}
+  },
+
   "logging": {
     "level": "INFO",
     "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",

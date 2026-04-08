@@ -81,11 +81,11 @@ class ParameterExtractor:
         
         # Patterns to match parameters (adjust based on your actual image format)
         patterns = {
-            'fluoro_time':  r'[Ff]luoro.*? time.*?[:\s]+([0-9]+[.,]?[0-9]*)\s*(min|s)',
+            'fluoro_time': r'[Ff]luoro.*?time.*?[:\s]+([0-9]+[.,]?[0-9]*)\s*(min|s)',
             'total_fluoro_kair': r'[Tt]otal.*?[Ff]luoro.*?[Kk]air.*?[:\s]+([0-9]+[.,]?[0-9]*)',
             'dose_entree_peau_max': r'[Dd]ose.*?entr[ée]e.*?peau.*?max.*?[:\s]+([0-9]+[.,]?[0-9]*)',
-            'exposit_ni': r'[Ee]xposit.*?NI.*?[:\s]+([0-9]+[.,]? [0-9]*)',
-            'total_pds': r'[Tt]otal.*? PDS.*?[:\s]+([0-9]+[.,]? [0-9]*)',
+            'exposit_ni': r'[Ee]xposit.*?NI.*?[:\s]+([0-9]+[.,]?[0-9]*)',
+            'total_pds': r'[Tt]otal.*?PDS.*?[:\s]+([0-9]+[.,]?[0-9]*)',
             'total_dose': r'[Tt]otal.*?[Dd]ose.*?[:\s]+([0-9]+[.,]?[0-9]*)',
             'frequence_acquisition': r'[Ff]r[ée]quence.*?acquisition.*?[:\s]+([0-9]+[.,]?[0-9]*)\s*[Ff]/[Ss]'
         }
@@ -170,7 +170,7 @@ class ParameterExtractor:
             pd.DataFrame: DataFrame with all extracted parameters
         """
         # Get all image files
-        image_extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.tiff']
+        image_extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.tif']
         image_files = []
         
         for ext in image_extensions:
@@ -209,15 +209,82 @@ class ParameterExtractor:
         
         return df
 
+    def extract_from_cropped_regions(self, image_path):
+        """
+        Extract parameters by cropping each parameter's region individually.
 
-if __name__ == "__main__": 
+        Uses RegionCropper to obtain sub-images, preprocesses each one with
+        ImageProcessor.preprocess_sub_image(), runs Tesseract on each, and
+        parses the first numeric value found.  Falls back to the full-image
+        regex approach when no crop regions are configured.
+
+        Args:
+            image_path (str): Path to the full dose report image
+
+        Returns:
+            dict: Extracted parameter values keyed by parameter name
+        """
+        try:
+            import cv2
+            from src.region_cropper import RegionCropper
+            from src.image_processor import ImageProcessor
+
+            cropper = RegionCropper()
+            image = cv2.imread(str(image_path))
+
+            if image is None:
+                print(f"❌ Error: Could not load image: {image_path}")
+                return self._get_empty_parameters(Path(image_path).name)
+
+            crops = cropper.crop_parameter_regions(image)
+
+            # If no crop regions defined, fall back to full-image approach
+            if not crops:
+                return self.extract_from_image(image_path)
+
+            processor = ImageProcessor(str(image_path))
+            parameters = self._get_empty_parameters(Path(image_path).name)
+            numeric_re = re.compile(r'([0-9]+[.,]?[0-9]*)')
+
+            for param_name, sub_image in crops.items():
+                preprocessed = processor.preprocess_sub_image(sub_image)
+                if preprocessed is None:
+                    continue
+                try:
+                    text = pytesseract.image_to_string(
+                        preprocessed, lang='fra+eng',
+                        config='--psm 7 --oem 3'
+                    )
+                    match = numeric_re.search(text)
+                    if match:
+                        value_str = match.group(1).replace(',', '.')
+                        parameters[param_name] = float(value_str)
+                except Exception as e:
+                    print(f"  ⚠ OCR failed for {param_name}: {e}")
+
+            extracted_count = sum(
+                1 for k, v in parameters.items()
+                if v is not None and k != 'image_file'
+            )
+            print(f"  ✓ Extracted {extracted_count}/7 parameters (cropped mode)")
+            return parameters
+
+        except ImportError as e:
+            print(f"⚠ Cannot use cropped extraction ({e}), falling back to full-image mode")
+            return self.extract_from_image(image_path)
+        except Exception as e:
+            print(f"❌ Cropped extraction failed for {Path(image_path).name}: {e}")
+            return self._get_empty_parameters(Path(image_path).name)
+
+
+if __name__ == "__main__":
     # Example usage
     extractor = ParameterExtractor(ocr_engine='tesseract')
     
     # Extract from single image
-    params = extractor.extract_from_image('data/raw/example_image. png')
+    params = extractor.extract_from_image('data/raw/example_image.png')
     print(params)
     
     # Batch extraction
     # df = extractor.batch_extract('data/raw/', 'data/processed/extracted_parameters.csv')
-    # print(df. head())
+    # print(df.head())
